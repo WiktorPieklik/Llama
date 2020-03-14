@@ -34,5 +34,4 @@ class VideoFrameSource(ThreadedFrameSource):
             read_start = time.time()
             ret, frame = self.capture_device.read()
             self.frame_queue.put(frame)
-            read_end = time.time()
-            time.sleep(read_start - read_end)
+            time.sleep(time.time() - read_start)
