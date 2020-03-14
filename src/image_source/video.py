@@ -10,8 +10,6 @@ from .source import ThreadedFrameSource
 class VideoFrameSource(ThreadedFrameSource):
     """ Frame source for loading video files. """
 
-    NANOS_IN_SEC = 10 ** 9
-
     def __init__(self, video_path: Union[str, Path]):
         """
         Parameters
@@ -33,8 +31,8 @@ class VideoFrameSource(ThreadedFrameSource):
         maintain corresponding playback speed.
         """
         while not self.is_join_requested:
-            read_start = time.time_ns()
+            read_start = time.time()
             ret, frame = self.capture_device.read()
             self.frame_queue.put(frame)
-            read_end = time.time_ns()
-            time.sleep((read_start - read_end) / self.NANOS_IN_SEC)
+            read_end = time.time()
+            time.sleep(read_start - read_end)
