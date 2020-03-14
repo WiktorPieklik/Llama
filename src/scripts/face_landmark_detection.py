@@ -1,7 +1,7 @@
 import cv2
 import dlib
 
-from .face_mask.points import FaceMaskPoints
+from face_mask.points import FaceMaskPoints
 
 cap = cv2.VideoCapture(0)
 detector = dlib.get_frontal_face_detector()
