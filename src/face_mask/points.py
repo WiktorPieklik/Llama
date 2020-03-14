@@ -1,38 +1,13 @@
-from abc import ABC, abstractmethod
 from typing import Tuple
 
 import dlib
 import numpy as np
 from cv2 import cv2
 
-
-class FaceMaskGeneric(ABC):
-    """ Generic class for applying a face mask. """
-
-    def __init__(self):
-        pass
-
-    @abstractmethod
-    def apply(
-        self, input_img: np.ndarray, face_landmarks: dlib.full_object_detection
-    ) -> None:
-        """ Returns image with this mask applied on the input image.
-
-        Parameters
-        ----------
-        input_img : :obj:`np.ndarray`
-            Input image
-        face_landmarks : :obj:`dlib.full_object_detection`
-
-        Returns
-        -------
-        :obj:`np.ndarray`
-            Image with applied mask
-        """
-        pass
+from .mask import FaceMask
 
 
-class FaceMaskPoints(FaceMaskGeneric):
+class FaceMaskPoints(FaceMask):
     """ FaceMask for drawing points over face landmarks. """
 
     def __init__(
