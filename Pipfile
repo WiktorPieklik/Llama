@@ -6,6 +6,8 @@ verify_ssl = true
 [dev-packages]
 ipython = "*"
 pytest = "*"
+flake8 = "*"
+black = "==19.10b0"
 
 [packages]
 opencv-python = "*"
@@ -13,7 +15,7 @@ numpy = "*"
 scikit-learn = "*"
 matplotlib = "*"
 pillow = "*"
-bpython = "*"
+dlib = "*"
 
 [requires]
 python_version = "3.7"
