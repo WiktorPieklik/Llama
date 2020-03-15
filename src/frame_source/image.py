@@ -26,4 +26,4 @@ class ImageFrameSource(FrameSource):
         self.frame = cv2.imread(filename=image_path, flags=flags)
 
     def get_frame(self) -> np.ndarray:
-        return self.frame
+        return self.frame.copy()
