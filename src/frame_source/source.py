@@ -24,23 +24,7 @@ class FrameSource(ABC):
 class ThreadedFrameSource(FrameSource, Thread, ABC):
     def __init__(self):
         super().__init__()
-        self.frame_queue = Queue()
         self.is_join_requested = False
-
-    def get_frame(self, block: bool = True) -> np.ndarray:
-        """ Returns oldest frame from `self.frame_queue`.
-
-        Parameters
-        ----------
-        block : bool, optional
-            Defines blocking behavior of getting element from queue.
-
-        Returns
-        -------
-        :obj:`np.ndarray`
-            Oldest frame from `self.frame_queue`.
-        """
-        return self.frame_queue.get(block=block)
 
     @abstractmethod
     def run(self) -> None:
