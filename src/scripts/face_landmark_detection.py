@@ -3,14 +3,14 @@ import os
 import cv2
 import dlib
 
-from face_mask.points import FaceMaskPoints
-from frame_source.camera import CameraFrameSource
-from frame_source.source import ThreadedFrameSource
-from frame_source.video import VideoFrameSource
+from ..face_mask.points import FaceMaskPoints
+from ..frame_source.camera import CameraFrameSource
+from ..frame_source.source import ThreadedFrameSource
+from ..frame_source.video import VideoFrameSource
 
 print(os.getcwd())
-# frame_source = CameraFrameSource(0)
-frame_source = VideoFrameSource("data/external/pexels_video/1.mp4")
+frame_source = CameraFrameSource(0)
+# frame_source = VideoFrameSource("data/external/pexels_video/1.mp4")
 # frame_source = ImageFrameSource(
 #     "data/external/sof/AboA_00148_m_33_i_nf_nc_hp_2016_2_e0_nl_o.jpg"
 # )
