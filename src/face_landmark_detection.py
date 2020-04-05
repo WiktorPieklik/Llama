@@ -3,10 +3,10 @@ import os
 import cv2
 import dlib
 
-from ..face_mask.points import FaceMaskPoints
-from ..frame_source.camera import CameraFrameSource
-from ..frame_source.source import ThreadedFrameSource
-from ..frame_source.video import VideoFrameSource
+from .face_mask.points import FaceMaskPoints
+from .frame_source.camera import CameraFrameSource
+from .frame_source.source import ThreadedFrameSource
+from .frame_source.video import VideoFrameSource
 
 print(os.getcwd())
 frame_source = CameraFrameSource(0)
