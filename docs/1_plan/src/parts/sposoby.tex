@@ -1,5 +1,8 @@
 \section{Sposoby dojścia do celu}
 
+
+
+
 \subsection{Narzędzia}
 
 % Symbole do głębokości=3 w itemize zmienione na kropki
@@ -11,17 +14,53 @@
     \begin{itemize}
         \item Narzędzia wykorzystane do przetwarzania obrazów:
         \begin{itemize}     
-            \item \href{https://pillow.readthedocs.io/en/stable/}{Pillow - zbiór narzędzi do obróbki grafiki},
-            \item \href{https://numpy.org/}{numpy - obliczenia naukowe, pythonowa alternatywa dla języka MATLAB},
+            \item \href{https://pillow.readthedocs.io/en/stable/}{Pillow - zbiór narzędzi do obróbki grafiki}\cite{pillow},
+            \item \href{https://numpy.org/}{numpy - obliczenia naukowe, pythonowa alternatywa dla języka MATLAB}\cite{numpy},
             \item \href{https://pypi.org/project/opencv-python/}{opencv-python - \say{Open Source Computer Vision Library
-            }},
-            \item \href{http://dlib.net/}{dlib - zbiór narzędzi uczenia maszynowego}.
+            }}\cite{opencv-python},
+            \item \href{http://dlib.net/}{dlib - zbiór narzędzi uczenia maszynowego}\cite{dlib}.
         \end{itemize}   
         \item Inne narzędzia:
         \begin{itemize}
-            \item \href{https://pypi.org/project/PyQt5/}{PyQt5 - framework GUI.}
+            \item \href{https://pypi.org/project/PyQt5/}{PyQt5 - framework GUI}\cite{pyqt5}.
         \end{itemize}
     \end{itemize}
-    \item Zestaw danych \href{https://ibug.doc.ic.ac.uk/resources/300-W/}{iBUG 300-W}\cite{300-w}
 \end{itemize}
 
+\subsection{Algorytmy}
+\begin{itemize}
+    \item Algorytm \href{http://www.csc.kth.se/~vahidk/face_ert.html}{\say{Ensemble of Regression Trees (ERT)}}\cite{face-ert}.
+\end{itemize}
+
+\subsection{Dane}
+\begin{itemize}
+\item Zestaw danych \href{https://ibug.doc.ic.ac.uk/resources/300-W/}{iBUG 300-W}\cite{300-w}. 
+\end{itemize}
+
+
+\subsection{Plan realizacji}
+\begin{itemize}
+
+    \item Rozpoznawanie twarzy: 
+    \begin{enumerate}
+        \item określenie potrzebnych punktów charakterystycznych.
+        \item Wytrenowanie modelu predyktora na podstawie zestawu danych iBUG 300-W\cite{300-w}, mając na uwadze szybkość predykcji, potrzebną do rysowania masek w czasie rzeczywistym. 
+        \item Zastosowanie modelu wynikowego do predykcji położenia punktów charakterystycznych na obrazie pobieranym ze źródła obrazu (docelowo kamery).
+    \end{enumerate}
+  
+    \item Maski:
+    \begin{enumerate}
+        \item Określenie interfejsów wejścia/wyjścia generycznej maski.
+        \item Określenie wymagań co do rodzajów masek, w tym aspektów estetycznych.
+        \item Implementacja rysowania konkretnych masek, zgodnych z ustalonym interfejsem.
+    \end{enumerate}
+  
+    \item Interfejs graficzny:
+    \begin{enumerate}
+        \item określenie wymagań - funkcjonalności interfejsu graficznego oraz jego widoków,
+        \item projekt położenia elementów typu \say{wireframe}, dla poszczególnych widoków.
+        \item Implementacja widoków.
+        \item Integracja GUI z logiką programu.
+    \end{enumerate}
+
+\end{itemize} 
