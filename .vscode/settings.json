@@ -10,5 +10,9 @@
     "editor.wordWrap": "bounded"
   },
   "spellright.language": ["English (American)", "English (British)", "Polish"],
-  "spellright.documentTypes": ["markdown", "latex"]
+  "spellright.documentTypes": [
+    "markdown",
+    "latex"
+  ],
+  "python.pythonPath": "venv/bin/python3.8"
 }
