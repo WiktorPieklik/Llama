@@ -1,32 +1,43 @@
 \section{Wymagania}
+\subsection{Funkcjonalne}
+Jako user:
+\begin{itemize}
+    \item chcę nakładać maskę na obraz przechwytywany przez kamerę w czasie rzeczywistym,
+    \item chcę móc wybrać konkretną maskę, spośród listy oferowanych masek,
+    \item chcę móc zrobić zdjęcie, aby je zapisać na dysku,
+    \item chcę móc nagrać film, aby go zapisać na dysku
+\end{itemize}
+\subsection{Niefunkcjonalne}
+\begin{itemize}
+    \item Aplikacja działa jako aplikacja desktoptowa,
+    \item Aplikacja zrównolegla pobieranie klatek z kamery i ich przetwarzanie,
+    \item Aplikacja nie potrzebuje dostępu do internetu w trakcie swojego działania
+\end{itemize}
 
+\subsection{Aplikacja}
+\subsubsection{View}
+\begin{itemize}
+    \item Posiada okno z podglądem obrazu,
+    \item Oferuje wybór jeden spośród wielu masek,
+    \item Przycisk "włącz\wyłącz maskę",
+    \item Przycisk "Zrób zdjęcie",
+    \item Przycisk "Uruchom/zatrzymaj nagrywanie",
+    \item Opcjonalne wyświetlanie wykrytych punktów charakterystycznych twarzy.
+\end{itemize}
+\subsubsection{Controller}
+\begin{itemize}
+    \item Posiada osobny wątek/proces przetwarzający ramki za pomocą ImageProcessor,
+    \item Posiada osobny wątek/proces przechwytujący ramki za pomocą instancji klasy VideoSource
+\end{itemize}
 
-
-zrównoleglenie pobierania klatek z kamery i ich przetwarzania.
-funkcjonalne:
-Jako user, chcę nakładać maskę na obraz przechwytywany przez kamerę - w czasie rzeczywistym.
-Jako user, chcę móc wybrać konkretną maskę, spośród listy oferowanych masek.
-Jako user, chcę móc zrobić zdjęcie, aby je zapisać na dysku.
-Jako user, chcę móc nagrać film, aby go zapisać na dysku.
-
-
-Aplikacja:
-View:
-Posiada okno z podglądem obrazu.
-Oferuje wybór jednej, spośród wielu masek.
-Przycisk “wyłącz/włącz maskę”.
-Opcjonalne wyświetlanie wykrytych punktów charakterystycznych twarzy.
-Przycisk “Zrób zdjęcie”.
-Uruchom/zatrzymaj nagrywanie.
-Controller:
-Posiada osobny wątek/proces przetwarzający ramki za pomocą ImageProcessor.
-Posiada osobny wątek/proces, przechwytujący ramki za pomocą instancji VideoSource.
-
-
-Maski nakładane real-time (przykładowe pomysły):
-Nakładana grafika:
-okulary,
-wąsy,
-fryzura.
-Przekształcenia geometrii:	
-powiększenie oczu/ust.
+\subsection{Przykłady masek nakładanych real-time}
+\subsubsection{Nakładana grafika}
+\begin{itemize}
+    \item Okulary,
+    \item wąsy,
+    \item fryzura
+\end{itemize}
+\subsubsection{Przekształcenia geometrii}
+\begin{itemize}
+    \item Powiększanie oczu/ust
+\end{itemize}
