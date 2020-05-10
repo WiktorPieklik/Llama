@@ -1,0 +1,40 @@
+@startuml data_flow
+start
+
+:Zainicjalizuj:
+- źródło obrazu (kamerę),
+- detektor twarzy,
+- predyktor punktów charakterystycznych,;
+
+:Wyświetl interfejs graficzny;
+
+while ("Wyjście z programu?") is (nie)
+    :Pobierz obraz <b>F<sub>n</sub></b> ze źródła klatek.;
+    note left
+        Za pomocą <b><i>FrameSource</i></b>.
+    end note
+
+    :Przekształć <b>F<sub>n</sub></b> w skalę szarości, zwróć jako <b>G<sub>n</sub></b>.;
+
+    :Wykryj obszary <b>A = {a<sub>0</sub>, a<sub>1</sub>, ..., a<sub>n</sub>}</b> na obrazie <b>G<sub>n</sub></b>,\nw których znajdują się twarze.;
+    note left
+        Za pomocą <b><i>FaceDetector</i></b>.
+    end note
+
+    :Wykryj punkty charakterystyczne <b>L = {l<sub>0</sub>, l<sub>1</sub>, ..., l<sub>n</sub>}</b>\ndla każdej z wykrytych twarzy w zbiorze A.;
+    note left
+        Za pomocą <b><i>LandmarkDetector</i></b>.
+    end note
+
+    :Na podstawie zbioru <b>L</b> narysuj aktywną maskę na każdej\nz wykrytych twarzy, na obrazie <b>F<sub>n</sub></b>. Zwróć jako <b>R<sub>n</sub></b>.;
+    note left
+        Za pomocą <b><i>FaceMask</i></b>.
+    end note
+
+    :Wyświetl obraz wynikowy <b>R<sub>n</sub></b> w interfejsie graficznym.;
+
+endwhile(tak)
+
+stop
+
+@enduml

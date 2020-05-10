@@ -1,0 +1,43 @@
+\section{Wymagania}
+\subsection{Funkcjonalne}
+Jako użytkownik chcę móc:
+\begin{itemize}
+    \item nakładać maskę na obraz przechwytywany przez kamerę w czasie rzeczywistym,
+    \item wybrać konkretną maskę, spośród listy oferowanych masek,
+    \item zrobić zdjęcie, aby je zapisać na dysku,
+    \item nagrać film, aby go zapisać na dysku.
+\end{itemize}
+\subsection{Niefunkcjonalne}
+\begin{itemize}
+    \item Aplikacja działa jako aplikacja desktopowa,
+    \item zrównolegla pobieranie klatek z kamery i ich przetwarzanie,
+    \item nie potrzebuje dostępu do internetu w trakcie swojego działania.
+\end{itemize}
+
+\subsection{Aplikacja}
+\subsubsection{View}
+\begin{itemize}
+    \item Posiada okno z podglądem obrazu,
+    \item oferuje wybór jeden spośród wielu masek,
+    \item przycisk \say{Włącz/wyłącz maskę},
+    \item przycisk \say{Zrób zdjęcie},
+    \item przycisk \say{Uruchom/zatrzymaj nagrywanie},
+    \item opcjonalne wyświetlanie wykrytych punktów charakterystycznych twarzy.
+\end{itemize}
+\subsubsection{Controller}
+\begin{itemize}
+    \item Posiada osobny wątek/proces przetwarzający ramki za pomocą klasy dziedziczącej po klasie ImageProcessor.
+    \item Posiada osobny wątek/proces przechwytujący ramki za pomocą instancji klasy dziedziczącej po klasie VideoSource.
+\end{itemize}
+
+\subsection{Przykłady masek nakładanych real-time}
+\subsubsection{Nakładana grafika}
+\begin{itemize}
+    \item Okulary,
+    \item wąsy,
+    \item fryzura.
+\end{itemize}
+\subsubsection{Przekształcenia geometrii}
+\begin{itemize}
+    \item Powiększanie oczu/ust
+\end{itemize}
