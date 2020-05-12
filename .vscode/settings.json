@@ -14,5 +14,6 @@
     "markdown",
     "latex"
   ],
-  "python.pythonPath": "venv/bin/python3.8"
+  "python.pythonPath": "venv/bin/python3.8",
+  "python.formatting.provider": "black"
 }
