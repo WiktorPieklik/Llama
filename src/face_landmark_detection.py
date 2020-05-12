@@ -1,12 +1,14 @@
 import os
 
-import cv2
-import dlib
+from cv2 import cv2
 
-from .face_mask.points import FaceMaskPoints
-from .frame_source.camera import CameraFrameSource
-from .frame_source.source import ThreadedFrameSource
-from .frame_source.video import VideoFrameSource
+from face_detector import FaceDetector
+from face_mask.points import FaceMaskPoints
+from frame_source.camera import CameraFrameSource
+from frame_source.source import ThreadedFrameSource
+from shape_predictor import ShapePredictor
+
+# from frame_source.video import VideoFrameSource
 
 print(os.getcwd())
 frame_source = CameraFrameSource(0)
@@ -17,9 +19,9 @@ frame_source = CameraFrameSource(0)
 if isinstance(frame_source, ThreadedFrameSource):
     frame_source.start()
 
-detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor(
-    "data/external/dlib_models/shape_predictor_68_face_landmarks.dat"
+detector = FaceDetector()
+predictor = ShapePredictor(
+    "../data/external/dlib_models/shape_predictor_68_face_landmarks.dat"
 )
 
 mask = FaceMaskPoints(point_radius=1, point_color=(255, 255, 0))
@@ -29,9 +31,9 @@ for frame in frame_source:
 
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    faces = detector(gray)
+    faces = detector.detect(gray)
     for face in faces:
-        landmarks = predictor(gray, face)
+        landmarks = predictor.predict(gray, face)
         mask.apply(frame, landmarks)
 
     cv2.imshow("Frame", frame)
