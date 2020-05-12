@@ -8,6 +8,7 @@ ipython = "*"
 pytest = "*"
 flake8 = "*"
 black = "==19.10b0"
+rope = "*"
 
 [packages]
 opencv-python = "*"
@@ -19,3 +20,6 @@ dlib = "*"
 
 [requires]
 python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true
