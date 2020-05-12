@@ -1,0 +1,85 @@
+from threading import Thread
+from typing import Optional
+
+from cv2 import cv2
+
+from config import SHAPE_PREDICTOR_MODEL_PATH
+from face_detector import FaceDetector
+from face_mask.points import FaceMaskPoints
+from frame_source.image import ImageFrameSource
+from frame_source.camera import CameraFrameSource
+from frame_source.video import VideoFrameSource
+from frame_source.source import FrameSource, ThreadedFrameSource
+from shape_predictor import ShapePredictor
+from ui import UI
+
+
+class Controller(Thread):
+    def __init__(self):
+        super(Controller, self).__init__()
+        self._is_join_requested = False
+
+        self._face_detector = FaceDetector()
+        self._shape_predictor = ShapePredictor(model_path=SHAPE_PREDICTOR_MODEL_PATH)
+        # self._frame_source: FrameSource = ImageFrameSource(
+        #     "ziomek.png"
+        # )
+        self._frame_source = None
+        # self.frame_source = VideoFrameSource("data/external/pexels_video/1.mp4")
+        self.frame_source = CameraFrameSource(0)
+        # self._next_frame_source: FrameSource = None
+        # self._ui = UI(self)
+        self._mask = FaceMaskPoints(point_radius=1, point_color=(255, 255, 0))
+
+    def join(self, timeout: Optional[float] = ...) -> None:
+        """ Attempts to join this thread.
+
+        Parameters
+        ----------
+        timeout : float, optional
+            Join timeout duration in seconds.
+        """
+        self.is_join_requested = True
+        super().join(timeout)
+
+    def run(self):
+        while not self._is_join_requested:
+            # if self._next_frame_source:
+            #     self._frame_source = self._next_frame_source
+            #     if(self._frame_source, ThreadedFrameSource):
+            #         # Start new thread frame source
+            #         self._frame_source.start()
+
+            #     self._next_frame_source = None
+            frame_color = self._frame_source.get_frame()
+            # if self._next_frame_source:
+            #     break
+            frame_gray = cv2.cvtColor(frame_color, cv2.COLOR_BGR2GRAY)
+            faces = self._face_detector.detect(frame_gray)
+
+            for face in faces:
+                landmarks = self._shape_predictor.predict(frame_gray, face)
+                self._mask.apply(frame_color, landmarks)
+
+            cv2.imshow("Frame", frame_color)
+            cv2.waitKey(1)
+
+    @property
+    def frame_source(self) -> FrameSource:
+        return self._frame_source
+
+    @frame_source.setter
+    def frame_source(self, new_frame_source: FrameSource):
+        if isinstance(self._frame_source, ThreadedFrameSource):
+            # Stop current threaded frame source
+            self._frame_source.join()
+        self._frame_source = new_frame_source
+        if isinstance(self._frame_source, ThreadedFrameSource):
+            # Start new threaded frame source
+            self._frame_source.start()
+
+    # def process_frame(self):
+    #     pass
+
+    def update_ui(self):
+        raise NotImplementedError

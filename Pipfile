@@ -9,6 +9,7 @@ pytest = "*"
 flake8 = "*"
 black = "==19.10b0"
 rope = "*"
+pylint = "*"
 
 [packages]
 opencv-python = "*"
@@ -17,6 +18,7 @@ scikit-learn = "*"
 matplotlib = "*"
 pillow = "*"
 dlib = "*"
+opencv-contrib-python = "*"
 
 [requires]
 python_version = "3.7"
