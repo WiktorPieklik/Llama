@@ -1,3 +1,4 @@
+# ibug 300W dataset
 afw
 helen
 ibug
@@ -7,3 +8,6 @@ labels_ibug_300W_train.xml
 labels_ibug_300W_test.xml
 labels_ibug_300W.xml
 lfpw
+
+# Trained shape prediction models
+*.dat
