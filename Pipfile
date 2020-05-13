@@ -1,0 +1,25 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+ipython = "*"
+pytest = "*"
+flake8 = "*"
+black = "==19.10b0"
+rope = "*"
+
+[packages]
+opencv-python = "*"
+numpy = "*"
+scikit-learn = "*"
+matplotlib = "*"
+pillow = "*"
+dlib = "*"
+
+[requires]
+python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true
