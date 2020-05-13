@@ -1,0 +1,6 @@
+black>=19.10b0
+flake8>=3.7.9
+ipython>=7.13.0
+imutils>=0.5.3
+pylint>=2.4.4
+
