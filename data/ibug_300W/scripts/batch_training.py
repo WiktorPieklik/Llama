@@ -35,37 +35,41 @@ def get_timestamp():
 def parse_args():
     ap = argparse.ArgumentParser()
     ap.add_argument(
-        "-i",
-        "--input-xml",
-        dest="input",
+        "--train-xml",
+        dest="train_xml",
         required=True,
-        help="path to input training XML file",
+        help="path to training labels XML file",
         type=str,
     )
     ap.add_argument(
-        "-c",
-        "--config",
-        dest="config",
+        "--test-xml",
+        dest="test_xml",
+        required=True,
+        help="path to test labels XML file",
+        type=str,
+    )
+    ap.add_argument(
+        "--config-json",
+        dest="config_json",
         required=True,
         help="Batch training config file",
         type=str,
     )
     ap.add_argument(
-        "-o",
         "--output-dir",
-        dest="output",
+        dest="output_dir",
         required=True,
         help="Output directory for trained dlib shape predictor models.",
         type=str,
     )
     ap.add_argument(
-        "-t",
         "--threads",
         dest="threads",
         required=False,
         help="number of threads to use for training. Defaults to CPU count.",
         type=int,
     )
+
     parsed_args = vars(ap.parse_args())
 
     return parsed_args
@@ -92,25 +96,35 @@ class TrainingData:
 
 
 def setup_logger():
+    log_format =" %(asctime)s :: %(levelname)-8s :: %(message)s"
+    date_format = "%Y-%m-%d_%H-%M-%S"
+    logging.basicConfig(
+        format=log_format,
+        level=logging.INFO,
+        datefmt=date_format,
+    )
     logger_root = logging.getLogger()
     logger_root.setLevel(logging.DEBUG)
 
     handler_file = logging.FileHandler(
-        "{}/{}_batch-training.log".format(args["output"], TIMESTAMP_START)
+        "{}/{}_batch-training.log".format(args["output_dir"], TIMESTAMP_START)
     )
-    handler_file.setLevel(logging.DEBUG)
-    logger_root.addHandler(handler_file)
 
-    handler_stdout = logging.StreamHandler(sys.stdout)
-    handler_stdout.setLevel(logging.DEBUG)
-    logger_root.addHandler(handler_stdout)
+    handler_file.setLevel(logging.DEBUG)
+    formatter_file_handler = logging.Formatter(
+        fmt=log_format, datefmt=date_format
+    )
+    handler_file.setFormatter(formatter_file_handler)
+    logger_root.addHandler(handler_file)
 
 
 if __name__ == "__main__":
     # Parse command line options
     args = parse_args()
-    input_labels_xml = args["input"]
-    output_model_dir = args["output"]
+    fpath_train_labels_xml = args["train_xml"]
+    fpath_output_model_dir = args["output_dir"]
+    fpath_test_labels_xml = args["test_xml"]
+    fpath_config_json = args["config_json"]
     if args["threads"]:
         target_thread_count = args["threads"]
     else:
@@ -119,26 +133,37 @@ if __name__ == "__main__":
     setup_logger()
 
     # Prepare training data
-    with open(args["config"], "r") as config_stream:
+    with open(fpath_config_json, "r") as config_stream:
         training_config_list = json.load(config_stream)
 
-    training_data_list = []
-    for training_config in training_config_list:
-        training_data_list.append(TrainingData(config=training_config))
+    training_data_list = [
+        TrainingData(config=training_config) for training_config in training_config_list
+    ]
 
     # Train models sequentially
-    for training_data in training_data_list:
+    for trained_count, training_data in enumerate(training_data_list):
+        logging.info("========== Training {} ==========".format(trained_count))
         model_name = "{}_{}".format(TIMESTAMP_START, training_data.name)
         output_model_path = model_name + ".dat"
 
         training_options = training_data.options
         training_options.num_threads = target_thread_count
-        logging.info("Training options:\n{}".format(training_options))
+        training_options.be_verbose = True
+        logging.info(str(training_options))
 
         # Save model-specific config to output dir
-        current_config_path = "{}/{}.json".format(output_model_dir, model_name)
+        current_config_path = "{}/{}.json".format(fpath_output_model_dir, model_name)
         with open(current_config_path, "w") as output_stream:
             output_stream.write(training_data.json)
 
         # Start training
-        train(input_labels_xml, output_model_path, training_options)
+        train(fpath_train_labels_xml, output_model_path, training_options)
+
+        # Evaluate resulting model
+        print("Evaluating trained model...")
+        # error_train = dlib.test_shape_predictor(
+        #     fpath_train_labels_xml, output_model_path
+        # )
+        error_test = dlib.test_shape_predictor(fpath_test_labels_xml, output_model_path)
+        # logging.info("{} on TRAIN labels => {} MAE.".format(model_name, error_train))
+        logging.info("{} on TEST labels => {} MAE.".format(model_name, error_test))
