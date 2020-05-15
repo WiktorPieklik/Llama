@@ -1,0 +1,4 @@
+# Ignore batch training output files
+*.dat
+*.log
+*.json

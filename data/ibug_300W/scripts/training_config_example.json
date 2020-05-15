@@ -1,0 +1,30 @@
+[
+  {
+	"name" : null, 
+    "cascade_depth": 15,
+    "feature_pool_region_padding": null,
+    "feature_pool_size": 400,
+    "lambda_param": null,
+    "nu": 0.1,
+    "num_test_splits": 50,
+    "num_trees_per_cascade_level": null,
+    "oversampling_amount": 5,
+    "oversampling_translation_jitter": 0.1,
+    "random_seed": null,
+    "tree_depth": 4
+  },
+  {
+	"name" : null, 
+    "cascade_depth": 15,
+    "feature_pool_region_padding": null,
+    "feature_pool_size": 400,
+    "lambda_param": null,
+    "nu": 0.1,
+    "num_test_splits": 50,
+    "num_trees_per_cascade_level": null,
+    "oversampling_amount": 5,
+    "oversampling_translation_jitter": 0.1,
+    "random_seed": null,
+    "tree_depth": 4
+  }
+]
