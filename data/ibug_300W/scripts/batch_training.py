@@ -1,3 +1,4 @@
+import time
 import argparse
 import json
 import logging
@@ -98,12 +99,10 @@ class TrainingData:
 
 
 def setup_logger():
-    log_format =" %(asctime)s :: %(levelname)-8s :: %(message)s"
+    log_format = " %(asctime)s :: %(levelname)-8s :: %(message)s"
     date_format = "%Y-%m-%d_%H-%M-%S"
     logging.basicConfig(
-        format=log_format,
-        level=logging.INFO,
-        datefmt=date_format,
+        format=log_format, level=logging.INFO, datefmt=date_format,
     )
     logger_root = logging.getLogger()
     logger_root.setLevel(logging.DEBUG)
@@ -113,9 +112,7 @@ def setup_logger():
     )
 
     handler_file.setLevel(logging.DEBUG)
-    formatter_file_handler = logging.Formatter(
-        fmt=log_format, datefmt=date_format
-    )
+    formatter_file_handler = logging.Formatter(fmt=log_format, datefmt=date_format)
     handler_file.setFormatter(formatter_file_handler)
     logger_root.addHandler(handler_file)
 
@@ -167,13 +164,22 @@ if __name__ == "__main__":
             output_stream.write(training_data.json)
 
         # Start training
+        time_training_start = time.time()
         train(fpath_train_labels_xml, output_model_path, training_options)
-
+        logging.info(
+            "Training time: {}s".format(round(time.time() - time_training_start))
+        )
         # Evaluate resulting model
         print("Evaluating trained model...")
         # error_train = dlib.test_shape_predictor(
         #     fpath_train_labels_xml, output_model_path
         # )
+        time_testing_start = time.time()
         error_test = dlib.test_shape_predictor(fpath_test_labels_xml, output_model_path)
+        logging.info(
+            "Testing time (test labels): {}s".format(
+                round(time.time() - time_testing_start)
+            )
+        )
         # logging.info("{} on TRAIN labels => {} MAE.".format(model_name, error_train))
         logging.info("{} on TEST labels => {} MAE.".format(model_name, error_test))
