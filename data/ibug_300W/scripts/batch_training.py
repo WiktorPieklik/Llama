@@ -131,6 +131,16 @@ if __name__ == "__main__":
 
     setup_logger()
 
+    # Check that specified files (dirs) exist
+    for file in [
+        fpath_train_labels_xml,
+        fpath_test_labels_xml,
+        fpath_output_model_dir,
+        fpath_config_json,
+    ]:
+        if not os.path.exists(file):
+            raise ValueError("Specified file '{}' doesn't exist")
+
     # Prepare training data
     with open(fpath_config_json, "r") as config_stream:
         training_config_list = json.load(config_stream)
