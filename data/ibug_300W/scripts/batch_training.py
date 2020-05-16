@@ -139,7 +139,7 @@ if __name__ == "__main__":
         fpath_config_json,
     ]:
         if not os.path.exists(file):
-            raise ValueError("Specified file '{}' doesn't exist")
+            raise ValueError("Specified file '{}' doesn't exist".format(file))
 
     # Prepare training data
     with open(fpath_config_json, "r") as config_stream:
