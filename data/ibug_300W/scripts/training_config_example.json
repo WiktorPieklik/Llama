@@ -1,6 +1,6 @@
 [
   {
-	"name" : null, 
+	"name" : "A",
     "cascade_depth": 15,
     "feature_pool_region_padding": null,
     "feature_pool_size": 400,
@@ -14,7 +14,7 @@
     "tree_depth": 4
   },
   {
-	"name" : null, 
+	"name" : "B",
     "cascade_depth": 15,
     "feature_pool_region_padding": null,
     "feature_pool_size": 400,

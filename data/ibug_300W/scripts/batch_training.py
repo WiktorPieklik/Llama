@@ -81,6 +81,8 @@ TIMESTAMP_START = get_timestamp()
 class TrainingData:
     def __init__(self, config: dict):
         self.config = config
+        if not self.name:
+            raise ValueError("Config name must be specified and unique.")
 
     @property
     def name(self) -> str:
@@ -136,9 +138,17 @@ if __name__ == "__main__":
     with open(fpath_config_json, "r") as config_stream:
         training_config_list = json.load(config_stream)
 
-    training_data_list = [
-        TrainingData(config=training_config) for training_config in training_config_list
-    ]
+    training_data_list = []
+    for training_config in training_config_list:
+        current_name = training_config["name"]
+        if not current_name:
+            raise ValueError("Config name cannot be None.")
+        if training_config["name"] in [conf["name"] for conf in training_config_list]:
+            raise ValueError(
+                "Name '{}' already occurred in another training config. "
+                "Config names must be unique.".format(current_name)
+            )
+        training_data_list.append(TrainingData(config=training_config))
 
     # Train models sequentially
     for trained_count, training_data in enumerate(training_data_list):
