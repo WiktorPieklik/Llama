@@ -143,7 +143,7 @@ if __name__ == "__main__":
         current_name = training_config["name"]
         if not current_name:
             raise ValueError("Config name cannot be None.")
-        if training_config["name"] in [conf["name"] for conf in training_config_list]:
+        if training_config["name"] in [data.name for data in training_data_list]:
             raise ValueError(
                 "Name '{}' already occurred in another training config. "
                 "Config names must be unique.".format(current_name)
@@ -154,7 +154,7 @@ if __name__ == "__main__":
     for trained_count, training_data in enumerate(training_data_list):
         logging.info("========== Training {} ==========".format(trained_count))
         model_name = "{}_{}".format(TIMESTAMP_START, training_data.name)
-        output_model_path = model_name + ".dat"
+        output_model_path = "{}/{}.dat".format(fpath_output_model_dir, model_name)
 
         training_options = training_data.options
         training_options.num_threads = target_thread_count
