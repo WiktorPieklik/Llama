@@ -177,9 +177,13 @@ if __name__ == "__main__":
         time_training_start = time.time()
         train(fpath_train_labels_xml, output_model_path, training_options)
         logging.info(
-            "File size: {}MB".format(os.path.getsize(output_model_path) / (2 ** 20))
+            "File size: {}MB".format(
+                round(os.path.getsize(output_model_path) / (2 ** 20), 3)
+            )
         )
-        logging.info("Training time: {}s".format(os.path))
+        logging.info(
+            "Training time: {}s".format(round(time_training_start - time.time()))
+        )
         # Evaluate resulting model
         print("Evaluating trained model...")
         # error_train = dlib.test_shape_predictor(
