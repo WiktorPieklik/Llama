@@ -182,7 +182,7 @@ if __name__ == "__main__":
             )
         )
         logging.info(
-            "Training time: {}s".format(round(time_training_start - time.time()))
+            "Training time: {}s".format(round(time.time() - time_training_start))
         )
         # Evaluate resulting model
         print("Evaluating trained model...")
