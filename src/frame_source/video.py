@@ -1,6 +1,7 @@
 import time
 from pathlib import Path
 from typing import Union
+import os
 
 from cv2 import cv2
 
@@ -20,6 +21,8 @@ class VideoFrameSource(ThreadedFrameSource):
         super().__init__()
         if isinstance(video_path, Path):
             video_path = str(video_path.resolve())
+        if not os.path.exists(video_path):
+            raise ValueError("The specified video file doesn't exist.")
         self.capture_device = cv2.VideoCapture(video_path)
         self.fps = self.capture_device.get(cv2.CAP_PROP_FPS)
         self.frame_duration = 1 / self.fps

@@ -3,6 +3,7 @@ from typing import Union
 
 import numpy as np
 from cv2 import cv2
+import os
 
 from .source import FrameSource
 
@@ -23,7 +24,9 @@ class ImageFrameSource(FrameSource):
         --------
         :func:`cv2.imread`
         """
+        if not os.path.exists(image_path):
+            raise ValueError("Specified image file doesn't exist")
         self.frame = cv2.imread(filename=image_path, flags=flags)
 
     def get_frame(self) -> np.ndarray:
-        return self.frame
+        return self.frame.copy()
