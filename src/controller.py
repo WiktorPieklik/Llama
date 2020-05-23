@@ -28,7 +28,7 @@ class Controller(Thread):
         #     "src/face_mask/assets/masks/haircut/haircut_male_3.png"
         # )
         self._mask = FaceMaskEyes(
-            "src/face_mask/assets/masks/glasses/glasses_0.png"
+            "src/face_mask/assets/masks/eyes/papa.png"
         )
 
     def join(self, timeout: Optional[float] = ...) -> None:
