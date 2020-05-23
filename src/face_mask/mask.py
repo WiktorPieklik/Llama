@@ -204,40 +204,37 @@ class FaceMaskHaircut(FaceMaskTwoPointAssetAlignment):
 def get_point_warped(perspective_transform, point):
     """ Returns location of point after applying perspective_transform.
 
-    Parameters
-    ----------
-    perspective_transform :
-        Perspective transform matrix.
-    point :
-        Input point to warp.
+class FaceMaskEyes(FaceMaskTwoPointAssetAlignment):
+    """ FaceMask for aligning an asset, based on center points of eyes. """
 
-    Returns
-    -------
-    point_warped :
-        Point after warping using the specified perspective transform.
-    """
-    px = (
-        perspective_transform[0][0] * point[0]
-        + perspective_transform[0][1] * point[1]
-        + perspective_transform[0][2]
-    ) / (
-        (
-            perspective_transform[2][0] * point[0]
-            + perspective_transform[2][1] * point[1]
-            + perspective_transform[2][2]
+    def get_ref_points_face(self, face_points: Dict[int, dlib.point]) -> np.ndarray:
+        ref_points_face = np.array(
+            [
+                np.array(
+                    [
+                        utils_point.dlib_point_to_np_array(
+                            face_points[points_eye_corners[0]]
+                        ),
+                        utils_point.dlib_point_to_np_array(
+                            face_points[points_eye_corners[1]]
+                        ),
+                    ]
+                ).mean(axis=0)
+                for points_eye_corners in [[36, 39], [45, 42]]
+            ],
+            dtype=np.int,
         )
-    )
-    py = (
-        perspective_transform[1][0] * point[0]
-        + perspective_transform[1][1] * point[1]
-        + perspective_transform[1][2]
-    ) / (
-        (
-            perspective_transform[2][0] * point[0]
-            + perspective_transform[2][1] * point[1]
-            + perspective_transform[2][2]
-        )
-    )
+        return ref_points_face
 
-    point_warped = (int(px), int(py))
-    return point_warped
+    @lru_cache()
+    def get_ref_points_asset(self) -> np.ndarray:
+        return np.array(
+            [
+                [point["x"], point["y"]]
+                for point in [
+                    self.metadata["eye_center_left"],
+                    self.metadata["eye_center_right"],
+                ]
+            ],
+            dtype=np.int,
+        )
