@@ -1,12 +1,16 @@
-import enum
 import os
 from abc import ABC, abstractmethod
+from typing import Dict, Tuple
 
 import dlib
 import numpy as np
-from typing import Dict, Tuple
 from cv2 import cv2
 
+import geometry.point
+from geometry import vector
+from geometry import vector as utils_vector
+from geometry.misc import overlay_transparent
+from geometry.rotation import RotatorNonCropping
 from src import utils
 
 
@@ -86,50 +90,116 @@ class ImageAssetMixin:
         self._asset: np.ndarray = cv2.imread(path_asset, cv2.IMREAD_UNCHANGED)
 
         path_md_json = os.path.splitext(path_asset)[0] + ".json"
-        self._metadata: dict = utils.load_json(path_md_json)
+        self._metadata: dict = utils.json_file_to_dict(path_md_json)
 
     @property
     def metadata(self) -> dict:
+        """ Returns metadata structure.
+
+        Returns
+        -------
+        dict
+            This asset's metadata structure.
+        """
         return self._metadata
 
     @property
     def asset(self) -> np.ndarray:
+        """ Returns copy of asset.
+
+        Returns
+        -------
+        np.ndarray
+            Copy of this asset's image.
+        """
         return self._asset.copy()
 
 
-class FaceMaskHaircut(FaceMask, ImageAssetMixin):
+class FaceMaskTwoPointAssetAlignment(FaceMask, ImageAssetMixin):
+    """ Generic class for aligning an asset onto a face, based on two pairs of
+    reference points.
+    """
+
     def __init__(self, path_asset_image: str):
         FaceMask.__init__(self)
         ImageAssetMixin.__init__(self, path_asset_image)
 
-    def apply(self, input_img: np.ndarray, face_points: Dict[int, dlib.point]) -> None:
+    @abstractmethod
+    def get_ref_points_face(self, face_points: Dict[int, dlib.point]) -> np.ndarray:
+        """ Returns reference points detected on face.
 
-        points_source = np.float32(
-            [list(self.metadata[key].values()) for key in ["0", "0", "16", "16"]]
+        The asset is aligned to the reference points detected on a face.
+        """
+        pass
+
+    @abstractmethod
+    def get_ref_points_asset(self) -> np.ndarray:
+        """ Returns reference points on asset.
+
+        Based on these points, the asset is aligned to the reference points
+        detected on a face.
+        """
+        pass
+
+    def apply(
+        self, image_input: np.ndarray, face_points: Dict[int, dlib.point]
+    ) -> np.ndarray:
+        # Get points necessary for geometric transformations
+        vector_bound_asset = self.get_ref_points_asset()
+        vector_free_asset = vector.convert_bound_to_free(vector_bound_asset)
+        vector_bound_face = self.get_ref_points_face(face_points=face_points)
+        vector_free_face = vector.convert_bound_to_free(vector_bound_face)
+
+        # Rotate asset
+        angle_asset_rotation = utils_vector.calc_angle_clockwise(
+            vector_free_asset, vector_free_face
         )
-        # point_tl_source = get_top_left_point(points_source)
-        points_target = np.float32(
-            [[face_points[i].x, face_points[i].y] for i in [0, 0, 16, 16]]
+        rotator = RotatorNonCropping(self.asset, angle=angle_asset_rotation)
+
+        # Resize image
+        scale_factor = np.linalg.norm(vector_free_face) / np.linalg.norm(
+            vector_free_asset
         )
-        # point_tl_target = get_top_left_point(points_target)
+        asset_size_scaled = tuple(
+            int(val * scale_factor) for val in rotator.image_rotated.shape[:2][::-1]
+        )
+        asset_rotated_scaled = cv2.resize(
+            src=rotator.image_rotated, dsize=asset_size_scaled
+        )
 
-        transform_matrix = cv2.getPerspectiveTransform(points_source, points_target)
-        points_source_warped = [
-            get_point_warped(transform_matrix, p) for p in points_source
-        ]
-        transformed = transform_perspective(self.asset, transform_matrix)
-        cv2.imshow("Transformed", transformed)
-        cv2.waitKey(1)
+        # Calculate overlay coordinates
+        point_ref_input = vector_bound_face[0]
+        point_ref_asset = (
+            scale_factor * rotator.get_point_after_rotation(point=vector_bound_asset[0])
+        ).astype(np.int)
+        position_asset = point_ref_input - point_ref_asset
+        result = overlay_transparent(image_input, asset_rotated_scaled, position_asset)
+        return result
 
 
-def get_top_left_point(points):
-    np.array(list(np.min(points[:, i]) for i in range(2)))
+class FaceMaskHaircut(FaceMaskTwoPointAssetAlignment):
+    def __init__(self, path_asset_image: str):
+        FaceMaskTwoPointAssetAlignment.__init__(self, path_asset_image)
 
+        self._ref_points_asset = np.array(
+            [
+                geometry.point.md_point_to_np_array(self.metadata[key])
+                for key in ["0", "16"]
+            ],
+            dtype=np.int,
+        )
 
-def transform_perspective(image: np.ndarray, perspective_transform):
-    image_warped = cv2.warpPerspective(image, perspective_transform, (1000, 1000))
-    return image_warped
+    def get_ref_points_face(self, face_points: Dict[int, dlib.point]) -> np.ndarray:
+        return np.array(
+            [
+                geometry.point.dlib_point_to_np_array(face_points[key])
+                for key in [0, 16]
+            ],
+            dtype=np.int,
+        )
 
+    def get_ref_points_asset(self) -> np.ndarray:
+        return self._ref_points_asset
 
 def get_point_warped(perspective_transform, point):
     """ Returns location of point after applying perspective_transform.
