@@ -5,13 +5,9 @@ from cv2 import cv2
 
 from config import SHAPE_PREDICTOR_MODEL_PATH
 from face_detector import FaceDetector
-from face_mask.mask import FaceMaskPoints, FaceMaskHaircut
-from frame_source.image import ImageFrameSource
-from frame_source.camera import CameraFrameSource
-from frame_source.video import VideoFrameSource
-from frame_source.source import FrameSource, ThreadedFrameSource
+from face_mask.mask import FaceMaskHaircut, FaceMaskEyes
+from frame_source import CameraFrameSource, FrameSource, ThreadedFrameSource
 from shape_predictor import ShapePredictor
-from ui import UI
 
 
 class Controller(Thread):
@@ -22,14 +18,17 @@ class Controller(Thread):
         self._face_detector = FaceDetector()
         self._shape_predictor = ShapePredictor(model_path=SHAPE_PREDICTOR_MODEL_PATH)
         self._frame_source = None
-        self.frame_source = ImageFrameSource("src/keanu.png")
+        # self.frame_source = ImageFrameSource("src/keanu.png")
         # self.frame_source = VideoFrameSource("data/external/pexels_video/1.mp4")
-        # self.frame_source = CameraFrameSource(0)
+        self.frame_source = CameraFrameSource(0)
         # self._next_frame_source: FrameSource = None
         # self._ui = UI(self)
         # self._mask = FaceMaskPoints(point_radius=1, point_color=(255, 255, 0))
-        self._mask = FaceMaskHaircut(
-            "src/face_mask/assets/masks/haircut/haircut_female_0.png"
+        # self._mask = FaceMaskHaircut(
+        #     "src/face_mask/assets/masks/haircut/haircut_male_3.png"
+        # )
+        self._mask = FaceMaskEyes(
+            "src/face_mask/assets/masks/glasses/monocle_10.png"
         )
 
     def join(self, timeout: Optional[float] = ...) -> None:
@@ -45,16 +44,7 @@ class Controller(Thread):
 
     def run(self):
         while not self._is_join_requested:
-            # if self._next_frame_source:
-            #     self._frame_source = self._next_frame_source
-            #     if(self._frame_source, ThreadedFrameSource):
-            #         # Start new thread frame source
-            #         self._frame_source.start()
-
-            #     self._next_frame_source = None
             frame_color = self._frame_source.get_frame()
-            # if self._next_frame_source:
-            #     break
             frame_gray = cv2.cvtColor(frame_color, cv2.COLOR_BGR2GRAY)
             faces = self._face_detector.detect(frame_gray)
 
