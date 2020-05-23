@@ -74,6 +74,7 @@ class FaceMaskDrawPoints(FaceMask):
                 self._point_color,
                 -1,
             )
+        return input_img
 
 
 class ImageAssetMixin:
