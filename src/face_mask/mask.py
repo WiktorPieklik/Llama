@@ -198,7 +198,7 @@ class FaceMaskHaircut(FaceMaskTwoPointAssetAlignment):
     def get_ref_points_asset(self) -> np.ndarray:
         return np.array(
             [
-                utils_point.point.md_point_to_np_array(self.metadata[key])
+                utils_point.md_point_to_np_array(self.metadata[key])
                 for key in ["0", "16"]
             ],
             dtype=np.int,
@@ -207,6 +207,9 @@ class FaceMaskHaircut(FaceMaskTwoPointAssetAlignment):
 
 class FaceMaskEyes(FaceMaskTwoPointAssetAlignment):
     """ FaceMask for aligning an asset, based on center points of eyes. """
+
+    def __init__(self, path_asset_image: str):
+        FaceMaskTwoPointAssetAlignment.__init__(self, path_asset_image)
 
     def get_ref_points_face(self, face_points: Dict[int, dlib.point]) -> np.ndarray:
         ref_points_face = np.array(
