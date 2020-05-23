@@ -17,7 +17,9 @@ class FaceMask(ABC):
         pass
 
     @abstractmethod
-    def apply(self, input_img: np.ndarray, face_points: Dict[int, dlib.point]) -> None:
+    def apply(
+        self, input_img: np.ndarray, face_points: Dict[int, dlib.point]
+    ) -> np.ndarray:
         """ Returns image with this mask applied on the input image.
 
         Parameters
@@ -52,7 +54,9 @@ class FaceMaskPoints(FaceMask):
         self._point_radius = point_radius
         self._point_color = point_color
 
-    def apply(self, input_img: np.ndarray, face_points: Dict[int, dlib.point]) -> None:
+    def apply(
+        self, input_img: np.ndarray, face_points: Dict[int, dlib.point]
+    ) -> np.ndarray:
         """ Draws points over face landmarks.
 
         Parameters
