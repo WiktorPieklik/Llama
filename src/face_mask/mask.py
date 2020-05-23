@@ -227,7 +227,7 @@ class FaceMaskEyes(FaceMaskTwoPointAssetAlignment):
         )
         return ref_points_face
 
-    @lru_cache()
+    @lru_cache(maxsize=1)
     def get_ref_points_asset(self) -> np.ndarray:
         return np.array(
             [
