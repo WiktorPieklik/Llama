@@ -1,13 +1,13 @@
 import os
 from abc import ABC, abstractmethod
+from functools import lru_cache
 from typing import Dict, Tuple
 
 import dlib
 import numpy as np
 from cv2 import cv2
 
-import geometry.point
-from geometry import vector
+from geometry import point as utils_point
 from geometry import vector as utils_vector
 from geometry.misc import overlay_transparent
 from geometry.rotation import RotatorNonCropping
@@ -153,9 +153,9 @@ class FaceMaskTwoPointAssetAlignment(FaceMask, ImageAssetMixin):
     ) -> np.ndarray:
         # Get points necessary for geometric transformations
         vector_bound_asset = self.get_ref_points_asset()
-        vector_free_asset = vector.convert_bound_to_free(vector_bound_asset)
+        vector_free_asset = utils_vector.convert_bound_to_free(vector_bound_asset)
         vector_bound_face = self.get_ref_points_face(face_points=face_points)
-        vector_free_face = vector.convert_bound_to_free(vector_bound_face)
+        vector_free_face = utils_vector.convert_bound_to_free(vector_bound_face)
 
         # Rotate asset
         angle_asset_rotation = utils_vector.calc_angle_clockwise(
@@ -188,28 +188,22 @@ class FaceMaskHaircut(FaceMaskTwoPointAssetAlignment):
     def __init__(self, path_asset_image: str):
         FaceMaskTwoPointAssetAlignment.__init__(self, path_asset_image)
 
-        self._ref_points_asset = np.array(
+    def get_ref_points_face(self, face_points: Dict[int, dlib.point]) -> np.ndarray:
+        return np.array(
+            [utils_point.dlib_point_to_np_array(face_points[key]) for key in [0, 16]],
+            dtype=np.int,
+        )
+
+    @lru_cache(maxsize=1)
+    def get_ref_points_asset(self) -> np.ndarray:
+        return np.array(
             [
-                geometry.point.md_point_to_np_array(self.metadata[key])
+                utils_point.point.md_point_to_np_array(self.metadata[key])
                 for key in ["0", "16"]
             ],
             dtype=np.int,
         )
 
-    def get_ref_points_face(self, face_points: Dict[int, dlib.point]) -> np.ndarray:
-        return np.array(
-            [
-                geometry.point.dlib_point_to_np_array(face_points[key])
-                for key in [0, 16]
-            ],
-            dtype=np.int,
-        )
-
-    def get_ref_points_asset(self) -> np.ndarray:
-        return self._ref_points_asset
-
-def get_point_warped(perspective_transform, point):
-    """ Returns location of point after applying perspective_transform.
 
 class FaceMaskEyes(FaceMaskTwoPointAssetAlignment):
     """ FaceMask for aligning an asset, based on center points of eyes. """
