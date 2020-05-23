@@ -5,7 +5,7 @@ from cv2 import cv2
 
 from config import SHAPE_PREDICTOR_MODEL_PATH
 from face_detector import FaceDetector
-from face_mask.mask import FaceMaskHaircut, FaceMaskEyes
+from face_mask.mask import FaceMaskHaircut, FaceMaskEyes, FaceMaskMoustache
 from frame_source import CameraFrameSource, FrameSource, ThreadedFrameSource
 from shape_predictor import ShapePredictor
 
@@ -27,8 +27,8 @@ class Controller(Thread):
         # self._mask = FaceMaskHaircut(
         #     "src/face_mask/assets/masks/haircut/haircut_male_3.png"
         # )
-        self._mask = FaceMaskEyes(
-            "src/face_mask/assets/masks/eyes/papa.png"
+        self._mask = FaceMaskMoustache(
+            "src/face_mask/assets/masks/moustache/moustache_0.png"
         )
 
     def join(self, timeout: Optional[float] = ...) -> None:
