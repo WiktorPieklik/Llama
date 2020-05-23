@@ -90,6 +90,13 @@ class ImageAssetMixin:
         self._asset: np.ndarray = cv2.imread(path_asset, cv2.IMREAD_UNCHANGED)
 
         path_md_json = os.path.splitext(path_asset)[0] + ".json"
+
+        if not os.path.exists(path_md_json):
+            raise ValueError(
+                "Matching asset metadata doesn't exist. Expected file: '{}'.".format(
+                    path_md_json
+                )
+            )
         self._metadata: dict = utils.json_file_to_dict(path_md_json)
 
     @property
