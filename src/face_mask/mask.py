@@ -36,7 +36,7 @@ class FaceMask(ABC):
         pass
 
 
-class FaceMaskPoints(FaceMask):
+class FaceMaskDrawPoints(FaceMask):
     """ FaceMask for drawing points over face landmarks. """
 
     def __init__(
