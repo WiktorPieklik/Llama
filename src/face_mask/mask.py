@@ -242,3 +242,34 @@ class FaceMaskEyes(FaceMaskTwoPointAssetAlignment):
             ],
             dtype=np.int,
         )
+
+
+class FaceMaskMoustache(FaceMaskTwoPointAssetAlignment):
+    def __init__(self, path_asset_image: str):
+        FaceMaskTwoPointAssetAlignment.__init__(self, path_asset_image)
+
+    def get_ref_points_face(self, face_points: Dict[int, dlib.point]) -> np.ndarray:
+        ref = np.array(
+            [
+                utils_point.dlib_point_to_np_array(face_points[33]),
+                np.array(
+                    [
+                        utils_point.dlib_point_to_np_array(face_points[key])
+                        for key in [50, 52]
+                    ],
+                    dtype=np.int,
+                ).mean(axis=0),
+            ],
+            dtype=np.int,
+        )
+        return ref
+
+    @lru_cache(maxsize=1)
+    def get_ref_points_asset(self) -> np.ndarray:
+        return np.array(
+            [
+                utils_point.md_point_to_np_array(self.metadata[key])
+                for key in ["33", "51"]
+            ],
+            dtype=np.int,
+        )
