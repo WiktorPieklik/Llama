@@ -7,10 +7,10 @@ import dlib
 import numpy as np
 from cv2 import cv2
 
-from geometry import point as utils_point
-from geometry import vector as utils_vector
-from geometry.misc import overlay_transparent
-from geometry.rotation import RotatorNonCropping
+from src.geometry import point as utils_point
+from src.geometry import vector as utils_vector
+from src.geometry.misc import overlay_transparent
+from src.geometry.rotation import RotatorNonCropping
 from src import utils
 
 
