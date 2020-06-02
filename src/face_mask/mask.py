@@ -9,7 +9,7 @@ from cv2 import cv2
 
 from src.geometry import point as utils_point
 from src.geometry import vector as utils_vector
-from src.geometry.misc import overlay_transparent
+from src.geometry.overlay import overlay_transparent
 from src.geometry.rotation import RotatorNonCropping
 from src import utils
 
