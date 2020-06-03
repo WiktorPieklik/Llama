@@ -12,6 +12,14 @@ from src.geometry import vector as utils_vector
 from src.geometry.overlay import overlay_transparent
 from src.geometry.rotation import RotatorNonCropping
 from src import utils
+from enum import Enum
+
+
+class MaskType(Enum):
+    """ Enum class determining available types of mask. """
+    EYE_MASK = 'EYE_MASK'
+    HAIR_MASK = 'HAIR_MASK'
+    MOUSTACHE_MASK = 'MOUSTACHE_MASK'
 
 
 class FaceMask(ABC):
@@ -139,14 +147,15 @@ class FaceMaskTwoPointAssetAlignment(FaceMask, ImageAssetMixin):
         """
         pass
 
-    @abstractmethod
+    @lru_cache(maxsize=1)
     def get_ref_points_asset(self) -> np.ndarray:
-        """ Returns reference points on asset.
-
-        Based on these points, the asset is aligned to the reference points
-        detected on a face.
-        """
-        pass
+        return np.array(
+            [
+                [point["x"], point["y"]]
+                for point in self.metadata['ref_points']
+            ],
+            dtype=np.int,
+        )
 
     def apply(
         self, image_input: np.ndarray, face_points: Dict[int, dlib.point]
@@ -184,6 +193,17 @@ class FaceMaskTwoPointAssetAlignment(FaceMask, ImageAssetMixin):
         return result
 
 
+class MaskFactory:
+    """ Simple factory for creating FaceMask class instances based on metadata. """
+    def create_mask(self, path_asset_image: str) -> FaceMaskTwoPointAssetAlignment:
+        mask_mixin = ImageAssetMixin(path_asset_image)
+        return {
+           MaskType.EYE_MASK: FaceMaskEyes(path_asset_image=path_asset_image),
+           MaskType.HAIR_MASK: FaceMaskHaircut(path_asset_image=path_asset_image),
+           MaskType.MOUSTACHE_MASK: FaceMaskMoustache(path_asset_image=path_asset_image)
+        }.get(MaskType(mask_mixin.metadata['mask_type']))
+
+
 class FaceMaskHaircut(FaceMaskTwoPointAssetAlignment):
     def __init__(self, path_asset_image: str):
         FaceMaskTwoPointAssetAlignment.__init__(self, path_asset_image)
@@ -191,16 +211,6 @@ class FaceMaskHaircut(FaceMaskTwoPointAssetAlignment):
     def get_ref_points_face(self, face_points: Dict[int, dlib.point]) -> np.ndarray:
         return np.array(
             [utils_point.dlib_point_to_np_array(face_points[key]) for key in [0, 16]],
-            dtype=np.int,
-        )
-
-    @lru_cache(maxsize=1)
-    def get_ref_points_asset(self) -> np.ndarray:
-        return np.array(
-            [
-                utils_point.md_point_to_np_array(self.metadata[key])
-                for key in ["0", "16"]
-            ],
             dtype=np.int,
         )
 
@@ -230,19 +240,6 @@ class FaceMaskEyes(FaceMaskTwoPointAssetAlignment):
         )
         return ref_points_face
 
-    @lru_cache(maxsize=1)
-    def get_ref_points_asset(self) -> np.ndarray:
-        return np.array(
-            [
-                [point["x"], point["y"]]
-                for point in [
-                    self.metadata["eye_center_left"],
-                    self.metadata["eye_center_right"],
-                ]
-            ],
-            dtype=np.int,
-        )
-
 
 class FaceMaskMoustache(FaceMaskTwoPointAssetAlignment):
     def __init__(self, path_asset_image: str):
@@ -263,13 +260,3 @@ class FaceMaskMoustache(FaceMaskTwoPointAssetAlignment):
             dtype=np.int,
         )
         return ref
-
-    @lru_cache(maxsize=1)
-    def get_ref_points_asset(self) -> np.ndarray:
-        return np.array(
-            [
-                utils_point.md_point_to_np_array(self.metadata[key])
-                for key in ["33", "51"]
-            ],
-            dtype=np.int,
-        )

@@ -3,11 +3,11 @@ from typing import Optional
 
 from cv2 import cv2
 
-from config import SHAPE_PREDICTOR_MODEL_PATH
-from face_detector import FaceDetector
-from face_mask.mask import FaceMaskHaircut, FaceMaskEyes, FaceMaskMoustache
-from frame_source import CameraFrameSource, FrameSource, ThreadedFrameSource
-from shape_predictor import ShapePredictor
+from src.config import SHAPE_PREDICTOR_MODEL_PATH
+from src.face_detector import FaceDetector
+from src.face_mask.mask import FaceMaskHaircut, FaceMaskEyes, FaceMaskMoustache, MaskFactory
+from src.frame_source import CameraFrameSource, FrameSource, ThreadedFrameSource
+from src.shape_predictor import ShapePredictor
 
 
 class Controller(Thread):
@@ -24,12 +24,7 @@ class Controller(Thread):
         # self._next_frame_source: FrameSource = None
         # self._ui = UI(self)
         # self._mask = FaceMaskPoints(point_radius=1, point_color=(255, 255, 0))
-        # self._mask = FaceMaskHaircut(
-        #     "src/face_mask/assets/masks/haircut/haircut_male_3.png"
-        # )
-        self._mask = FaceMaskMoustache(
-            "src/face_mask/assets/masks/moustache/moustache_0.png"
-        )
+        self._mask = MaskFactory().create_mask("src/face_mask/assets/masks/eyes/hehe.png")
 
     def join(self, timeout: Optional[float] = ...) -> None:
         """ Attempts to join this thread.
