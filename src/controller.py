@@ -3,11 +3,11 @@ from typing import Optional
 
 from cv2 import cv2
 
-from src.config import SHAPE_PREDICTOR_MODEL_PATH
-from src.face_detector import FaceDetector
-from src.face_mask.mask import FaceMaskHaircut, FaceMaskEyes, FaceMaskMoustache, MaskFactory
-from src.frame_source import CameraFrameSource, FrameSource, ThreadedFrameSource
-from src.shape_predictor import ShapePredictor
+from config import SHAPE_PREDICTOR_MODEL_PATH
+from face_detector import FaceDetector
+from face_mask.mask import FaceMaskHaircut, FaceMaskEyes, FaceMaskMoustache, MaskFactory
+from frame_source import CameraFrameSource, FrameSource, ThreadedFrameSource
+from shape_predictor import ShapePredictor
 
 
 class Controller(Thread):
