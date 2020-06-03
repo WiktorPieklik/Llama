@@ -1,4 +1,7 @@
 {
-  "eye_center_left": { "x": 112, "y": 44 },
-  "eye_center_right": { "x": 358, "y": 44 }
+  "mask_type": "EYE_MASK",
+  "ref_points": [
+        {"x": 112, "y": 44 },
+        {"x": 358, "y": 44 }
+    ]
 }
