@@ -17,9 +17,10 @@ from enum import Enum
 
 class MaskType(Enum):
     """ Enum class determining available types of mask. """
-    EYE_MASK = 'EYE_MASK'
-    HAIR_MASK = 'HAIR_MASK'
-    MOUSTACHE_MASK = 'MOUSTACHE_MASK'
+
+    EYE_MASK = "EYE_MASK"
+    HAIR_MASK = "HAIR_MASK"
+    MOUSTACHE_MASK = "MOUSTACHE_MASK"
 
 
 class FaceMask(ABC):
@@ -142,8 +143,9 @@ class ImageAssetMixin:
 
 
 class FaceMaskTwoPointAssetAlignment(FaceMask, ImageAssetMixin):
-    """ Generic class for aligning an asset onto a face, based on two pairs of
-    reference points.
+    """ Generic class for aligning an asset onto a face.
+
+    Alignment is performed based on two pairs of reference points.
     """
 
     def __init__(self, path_asset_image: str):
@@ -161,10 +163,7 @@ class FaceMaskTwoPointAssetAlignment(FaceMask, ImageAssetMixin):
     @lru_cache(maxsize=1)
     def get_ref_points_asset(self) -> np.ndarray:
         return np.array(
-            [
-                [point["x"], point["y"]]
-                for point in self.metadata['ref_points']
-            ],
+            [[point["x"], point["y"]] for point in self.metadata["ref_points"]],
             dtype=np.int,
         )
 
@@ -209,13 +208,16 @@ class FaceMaskTwoPointAssetAlignment(FaceMask, ImageAssetMixin):
 
 class MaskFactory:
     """ Simple factory for creating FaceMask class instances based on metadata. """
+
     def create_mask(self, path_asset_image: str) -> FaceMaskTwoPointAssetAlignment:
         mask_mixin = ImageAssetMixin(path_asset_image)
         return {
-           MaskType.EYE_MASK: FaceMaskEyes(path_asset_image=path_asset_image),
-           MaskType.HAIR_MASK: FaceMaskHaircut(path_asset_image=path_asset_image),
-           MaskType.MOUSTACHE_MASK: FaceMaskMoustache(path_asset_image=path_asset_image)
-        }.get(MaskType(mask_mixin.metadata['mask_type']))
+            MaskType.EYE_MASK: FaceMaskEyes(path_asset_image=path_asset_image),
+            MaskType.HAIR_MASK: FaceMaskHaircut(path_asset_image=path_asset_image),
+            MaskType.MOUSTACHE_MASK: FaceMaskMoustache(
+                path_asset_image=path_asset_image
+            ),
+        }.get(MaskType(mask_mixin.metadata["mask_type"]))
 
 
 class FaceMaskHaircut(FaceMaskTwoPointAssetAlignment):
