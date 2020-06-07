@@ -1,5 +1,6 @@
 import os
 from abc import ABC, abstractmethod
+from enum import Enum
 from functools import lru_cache
 from typing import Dict, Tuple
 
@@ -7,12 +8,11 @@ import dlib
 import numpy as np
 from cv2 import cv2
 
+from src import utils
 from src.geometry import point as utils_point
 from src.geometry import vector as utils_vector
 from src.geometry.overlay import overlay_transparent
 from src.geometry.rotation import RotatorNonCropping
-from src import utils
-from enum import Enum
 
 
 class MaskType(Enum):
@@ -31,7 +31,7 @@ class FaceMask(ABC):
 
     @abstractmethod
     def apply(
-        self, input_img: np.ndarray, face_points: Dict[int, dlib.point]
+            self, input_img: np.ndarray, face_points: Dict[int, dlib.point]
     ) -> np.ndarray:
         """ Returns image with this mask applied on the input image.
 
@@ -48,20 +48,31 @@ class FaceMask(ABC):
         """
         pass
 
+    @property
     @abstractmethod
     def name(self) -> str:
         """ Returns human-friendly name of this mask. """
         pass
 
     def __str__(self):
-        return self.name()
+        return self.name
+
+
+class FaceMaskPassthrough(FaceMask):
+    """ Passthrough face mask. Does not affect the input image."""
+    def apply(self, input_img: np.ndarray, face_points: Dict[int, dlib.point]) -> np.ndarray:
+        pass
+
+    @property
+    def name(self) -> str:
+        return "Passthrough"
 
 
 class FaceMaskDrawPoints(FaceMask):
     """ FaceMask for drawing points over face landmarks. """
 
     def __init__(
-        self, point_radius: int = 2, point_color: Tuple[int, int, int] = (255, 0, 0)
+            self, point_radius: int = 2, point_color: Tuple[int, int, int] = (255, 0, 0)
     ):
         """
         Parameters
@@ -76,7 +87,7 @@ class FaceMaskDrawPoints(FaceMask):
         self._point_color = point_color
 
     def apply(
-        self, input_img: np.ndarray, face_points: Dict[int, dlib.point]
+            self, input_img: np.ndarray, face_points: Dict[int, dlib.point]
     ) -> np.ndarray:
         """ Draws points over face landmarks.
 
@@ -97,6 +108,7 @@ class FaceMaskDrawPoints(FaceMask):
             )
         return input_img
 
+    @property
     def name(self) -> str:
         return "Points"
 
@@ -168,7 +180,7 @@ class FaceMaskTwoPointAssetAlignment(FaceMask, ImageAssetMixin):
         )
 
     def apply(
-        self, image_input: np.ndarray, face_points: Dict[int, dlib.point]
+            self, image_input: np.ndarray, face_points: Dict[int, dlib.point]
     ) -> np.ndarray:
         # Get points necessary for geometric transformations
         vector_bound_asset = self.get_ref_points_asset()
@@ -196,7 +208,7 @@ class FaceMaskTwoPointAssetAlignment(FaceMask, ImageAssetMixin):
         # Calculate overlay coordinates
         point_ref_input = vector_bound_face[0]
         point_ref_asset = (
-            scale_factor * rotator.get_point_after_rotation(point=vector_bound_asset[0])
+                scale_factor * rotator.get_point_after_rotation(point=vector_bound_asset[0])
         ).astype(np.int)
         position_asset = point_ref_input - point_ref_asset
         result = overlay_transparent(image_input, asset_rotated_scaled, position_asset)
@@ -210,7 +222,8 @@ class FaceMaskTwoPointAssetAlignment(FaceMask, ImageAssetMixin):
 class MaskFactory:
     """ Simple factory for creating FaceMask class instances based on metadata. """
 
-    def create_mask(self, path_asset_image: str) -> FaceMaskTwoPointAssetAlignment:
+    @staticmethod
+    def create_mask(path_asset_image: str) -> FaceMaskTwoPointAssetAlignment:
         mask_mixin = ImageAssetMixin(path_asset_image)
         return {
             MaskType.EYE_MASK: FaceMaskEyes(path_asset_image=path_asset_image),
