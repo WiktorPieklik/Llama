@@ -192,7 +192,7 @@
               </property>
               <property name="icon">
                <iconset>
-                <normaloff>resources/svg/camera.svg</normaloff>resources/svg/camera.svg</iconset>
+                <normaloff>resources/icons/camera.png</normaloff>resources/icons/camera.png</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -245,7 +245,7 @@
               </property>
               <property name="icon">
                <iconset>
-                <normaloff>resources/svg/video.svg</normaloff>resources/svg/video.svg</iconset>
+                <normaloff>resources/icons/video.png</normaloff>resources/icons/video.png</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -449,7 +449,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QListView" name="list_view_masks_2">
+           <widget class="QListView" name="face_mask_list">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -492,22 +492,6 @@
              <enum>QListView::Fixed</enum>
             </property>
            </widget>
-          </item>
-          <item>
-           <spacer name="verticalSpacer_4">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>100</height>
-             </size>
-            </property>
-           </spacer>
           </item>
          </layout>
         </widget>
