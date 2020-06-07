@@ -202,6 +202,7 @@ class FaceMaskTwoPointAssetAlignment(FaceMask, ImageAssetMixin):
         result = overlay_transparent(image_input, asset_rotated_scaled, position_asset)
         return result
 
+    @property
     def name(self) -> str:
         return self.metadata["name"]
 
