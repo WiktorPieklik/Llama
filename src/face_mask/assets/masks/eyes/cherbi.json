@@ -1,0 +1,14 @@
+{
+  "name": "Cherbi",
+  "mask_type": "EYE_MASK",
+  "ref_points": [
+    {
+      "x": 334,
+      "y": 410
+    },
+    {
+      "x": 530,
+      "y": 405
+    }
+  ]
+}
