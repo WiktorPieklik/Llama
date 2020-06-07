@@ -1,0 +1,14 @@
+{
+  "name": "Llama",
+  "mask_type": "EYE_MASK",
+  "ref_points": [
+    {
+      "x": 385,
+      "y": 430
+    },
+    {
+      "x": 643,
+      "y": 396
+    }
+  ]
+}
