@@ -1,4 +1,6 @@
 {
+    "name": "Moustache 1",
+
   "mask_type": "MOUSTACHE_MASK",
   "ref_points": [
         { "x": 276, "y": 28 },

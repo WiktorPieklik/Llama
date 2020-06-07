@@ -1,7 +1,14 @@
 {
-    "mask_type": "EYE_MASK",
-    "ref_points": [
-        {"x":584, "y":143},
-        {"x":175, "y":143}
-    ]
+  "name": "Glasses 0",
+  "mask_type": "EYE_MASK",
+  "ref_points": [
+    {
+      "x": 584,
+      "y": 143
+    },
+    {
+      "x": 175,
+      "y": 143
+    }
+  ]
 }

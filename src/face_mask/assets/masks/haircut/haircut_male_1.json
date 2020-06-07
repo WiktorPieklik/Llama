@@ -1,7 +1,14 @@
 {
+  "name": "Haircut male 1",
   "mask_type": "HAIR_MASK",
   "ref_points": [
-        {"x": 33, "y": 301 },
-        {"x": 305, "y": 301 }
-    ]
+    {
+      "x": 33,
+      "y": 301
+    },
+    {
+      "x": 305,
+      "y": 301
+    }
+  ]
 }
