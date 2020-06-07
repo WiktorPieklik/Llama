@@ -47,6 +47,14 @@ class FaceMask(ABC):
         """
         pass
 
+    @abstractmethod
+    def name(self) -> str:
+        """ Returns human-friendly name of this mask. """
+        pass
+
+    def __str__(self):
+        return self.name()
+
 
 class FaceMaskDrawPoints(FaceMask):
     """ FaceMask for drawing points over face landmarks. """
@@ -87,6 +95,9 @@ class FaceMaskDrawPoints(FaceMask):
                 -1,
             )
         return input_img
+
+    def name(self) -> str:
+        return "Points"
 
 
 class ImageAssetMixin:
@@ -191,6 +202,9 @@ class FaceMaskTwoPointAssetAlignment(FaceMask, ImageAssetMixin):
         position_asset = point_ref_input - point_ref_asset
         result = overlay_transparent(image_input, asset_rotated_scaled, position_asset)
         return result
+
+    def name(self) -> str:
+        return self.metadata["name"]
 
 
 class MaskFactory:
