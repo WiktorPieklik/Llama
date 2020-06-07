@@ -1,7 +1,14 @@
 {
+  "name": "Moustache 3",
   "mask_type": "MOUSTACHE_MASK",
   "ref_points": [
-        { "x": 251, "y": 167 },
-        { "x": 251, "y": 195 }
-    ]
+    {
+      "x": 251,
+      "y": 167
+    },
+    {
+      "x": 251,
+      "y": 195
+    }
+  ]
 }

@@ -1,7 +1,14 @@
 {
+  "name": "Haircut female 5",
   "mask_type": "HAIR_MASK",
   "ref_points": [
-        {"x": 272, "y": 171 },
-        {"x": 425, "y": 171 }
-    ]
+    {
+      "x": 272,
+      "y": 171
+    },
+    {
+      "x": 425,
+      "y": 171
+    }
+  ]
 }
